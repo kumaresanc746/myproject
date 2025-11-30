@@ -1,27 +1,24 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+async function ensureDefaultAdmin() {
+    const email = "admin@gmail.com";
+    const password = "admin1234";
 
-const AdminSchema = new mongoose.Schema({
-  name: { type: String, required: true, trim: true },
-  email: { type: String, required: true, unique: true, lowercase: true, trim: true },
-  password: { type: String, required: true }
-}, { timestamps: true });
+    try {
+        let admin = await Admin.findOne({ email });
 
-// Hash password before saving
-AdminSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next();
-  try {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-    return next();
-  } catch (err) {
-    return next(err);
-  }
-});
+        if (!admin) {
+            await Admin.create({
+                name: "Admin User",
+                email: email,
+                password: password
+            });
+            console.log("✅ Default admin created:", email);
+        } else {
+            admin.password = password;
+            await admin.save();
+            console.log("🔄 Admin password updated:", email);
+        }
+    } catch (err) {
+        console.error("❌ Error ensuring default admin:", err);
+    }
+}
 
-// Compare password
-AdminSchema.methods.comparePassword = async function(candidatePassword) {
-  return bcrypt.compare(candidatePassword, this.password);
-};
-
-module.exports = mongoose.model('Admin', AdminSchema);
