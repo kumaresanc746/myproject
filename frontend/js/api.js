@@ -1,5 +1,5 @@
 // Inside frontend container, use Docker network name
-const API_BASE_URL = "http://13.62.76.73:3000/api";
+const API_BASE_URL = "http://13.51.175.161:3000/api";
 // Helper function to get auth token
 function getAuthToken() {
     return localStorage.getItem('token');

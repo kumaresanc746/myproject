@@ -9,7 +9,7 @@ const Admin = require('./models/Admin'); // Add this
 
 // Middleware
 app.use(cors({
-    origin: 'http://16.171.253.122', // your frontend URL
+    origin: 'http://13.51.175.161', // your frontend URL
     credentials: true
 }));
 app.use(express.json());
